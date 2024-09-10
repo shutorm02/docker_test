@@ -1,14 +1,9 @@
 FROM ruby:3.3.5
 
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs msmtp-mta
+RUN gem install webrick pg
 
-WORKDIR /app
+COPY ./msmtprc /etc/msmtprc
 
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
-
-RUN bundle install
-
-ENV Lang=ja_JP.UTF-8
-ENV TZ=Asia/Tokyo
+CMD ["ruby", "-run", "-e", "httpd", ".", "-p", "3000"]
 
